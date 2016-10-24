@@ -99,6 +99,9 @@ def workflow_report(in_csv, qap_type, run_name, res_dict,
             # Each scan has a volume and (optional) fd plot
             for scanid in scans:
                 sub_info = [subid, sesid, scanid]
+                # Jordi Huguet (2016-10-04) - Temporary fix for bug #64
+                # https://groups.google.com/forum/#!topic/pcp_forum/ncxhjc_A6oE
+                sub_info = [str(i) for i in sub_info]
                 sub_path = op.join(out_dir, run_name, '/'.join(sub_info))
                 m = op.join(sub_path, 'qap_mosaic', 'mosaic.pdf')
 
