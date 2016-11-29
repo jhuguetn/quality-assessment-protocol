@@ -4,7 +4,8 @@ def select_thresh(input_skull):
 
     import os
     import commands
-
+    import re
+    
     avg_in = "3dmaskave %s" % input_skull
 
     avg_out = commands.getoutput(avg_in)
@@ -21,9 +22,15 @@ def select_thresh(input_skull):
     os.system("rm HistOut.niml.hist")
 
     bins = {}
-
-    for line in cmd_out.split("\n"):
-
+    
+    # Jordi Huguet (2016-11-29) - Temporary fix for bug #XX
+    # https://groups.google.com/forum/#!topic/pcp_forum/G9QH5RZvm1M    
+#   for line in cmd_out.split("\n"):
+    # complete regexp for any Control Sequences (aka ANSI Escape Sequences) 
+    ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+    for raw_line in cmd_out.split("\n"):
+        line = ansi_escape.sub('', raw_line)
+        
         if "*" in line and not line.startswith("*"):
 
             vox_bin = line.replace(" ", "").split(":")[0]
